@@ -1,1010 +1,613 @@
-# Create the complete CSS file with all the styling for the full-featured form
-complete_css = '''/* CareerTrack MVP - Complete Styling */
+# Create the rebranded Document.it with AI analytics features
+import os
 
-/* Reset and Base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+# Create directory
+os.makedirs('document-it-mvp', exist_ok=True)
 
-:root {
-    /* Primary Colors */
-    --primary-color: #1e40af;
-    --secondary-color: #059669;
-    --accent-color: #7c3aed;
-    --success-color: #10b981;
-    --warning-color: #f59e0b;
-    --error-color: #ef4444;
-    --neutral-color: #6b7280;
+# Create the new HTML with Document.it branding and AI features
+document_it_html = '''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document.it - AI-Powered Career Analytics</title>
+    <link rel="stylesheet" href="style.css">
     
-    /* Background Colors */
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
-    --bg-tertiary: #f1f5f9;
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     
-    /* Text Colors */
-    --text-primary: #1f2937;
-    --text-secondary: #6b7280;
-    --text-tertiary: #9ca3af;
+    <!-- PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
-    /* Border Colors */
-    --border-light: #e5e7eb;
-    --border-medium: #d1d5db;
-    --border-dark: #9ca3af;
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    
-    /* Spacing */
-    --space-xs: 0.25rem;
-    --space-sm: 0.5rem;
-    --space-md: 1rem;
-    --space-lg: 1.5rem;
-    --space-xl: 2rem;
-    --space-2xl: 3rem;
-    
-    /* Border Radius */
-    --radius-sm: 0.25rem;
-    --radius-md: 0.5rem;
-    --radius-lg: 0.75rem;
-    --radius-xl: 1rem;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    line-height: 1.6;
-    color: var(--text-primary);
-    background-color: var(--bg-secondary);
-}
-
-/* Utility Classes */
-.hidden { display: none !important; }
-.container { 
-    max-width: 1200px; 
-    margin: 0 auto; 
-    padding: 0 var(--space-md); 
-}
-
-/* Loading Spinner */
-.loading-spinner {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.9);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid var(--border-light);
-    border-top: 4px solid var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Notifications */
-.notification {
-    position: fixed;
-    top: var(--space-lg);
-    right: var(--space-lg);
-    padding: var(--space-md);
-    border-radius: var(--radius-md);
-    color: white;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    min-width: 300px;
-    animation: slideIn 0.3s ease-out;
-}
-
-.notification.success { background-color: var(--success-color); }
-.notification.error { background-color: var(--error-color); }
-.notification.warning { background-color: var(--warning-color); }
-
-.notification-close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.2rem;
-    cursor: pointer;
-    margin-left: auto;
-}
-
-@keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-/* Buttons */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-xs);
-    padding: var(--space-sm) var(--space-md);
-    border: 1px solid transparent;
-    border-radius: var(--radius-md);
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    background: none;
-}
-
-.btn--primary {
-    background-color: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-}
-
-.btn--primary:hover {
-    background-color: #1d4ed8;
-    border-color: #1d4ed8;
-}
-
-.btn--outline {
-    color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.btn--outline:hover {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-.btn--secondary {
-    background-color: var(--neutral-color);
-    color: white;
-    border-color: var(--neutral-color);
-}
-
-.btn--danger {
-    background-color: var(--error-color);
-    color: white;
-    border-color: var(--error-color);
-}
-
-.btn--sm {
-    padding: var(--space-xs) var(--space-sm);
-    font-size: 0.75rem;
-}
-
-.btn--lg {
-    padding: var(--space-md) var(--space-xl);
-    font-size: 1rem;
-}
-
-.btn--full {
-    width: 100%;
-}
-
-/* Landing Page */
-.landing-hero {
-    min-height: 100vh;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
-    color: white;
-    display: flex;
-    align-items: center;
-}
-
-.hero-content {
-    text-align: center;
-    margin-bottom: var(--space-2xl);
-}
-
-.hero-content h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: var(--space-lg);
-}
-
-.hero-content p {
-    font-size: 1.25rem;
-    margin-bottom: var(--space-xl);
-    opacity: 0.9;
-}
-
-.hero-actions {
-    display: flex;
-    gap: var(--space-md);
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.hero-features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--space-xl);
-    margin-top: var(--space-2xl);
-}
-
-.feature-card {
-    text-align: center;
-    padding: var(--space-xl);
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-lg);
-    backdrop-filter: blur(10px);
-}
-
-.feature-icon {
-    font-size: 3rem;
-    margin-bottom: var(--space-md);
-}
-
-.feature-card h3 {
-    font-size: 1.25rem;
-    margin-bottom: var(--space-sm);
-}
-
-/* Modal */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background: white;
-    border-radius: var(--radius-lg);
-    width: 90%;
-    max-width: 400px;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--space-lg);
-    border-bottom: 1px solid var(--border-light);
-}
-
-.modal-close {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--text-secondary);
-}
-
-.modal-body {
-    padding: var(--space-lg);
-}
-
-.auth-switch {
-    text-align: center;
-    margin-top: var(--space-md);
-}
-
-.signup-only {
-    display: block;
-}
-
-/* Navigation */
-.navbar {
-    background: white;
-    border-bottom: 1px solid var(--border-light);
-    padding: var(--space-md) 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.navbar .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-brand h2 {
-    color: var(--primary-color);
-    font-size: 1.5rem;
-}
-
-.nav-menu {
-    display: flex;
-    gap: var(--space-lg);
-    align-items: center;
-}
-
-.nav-link {
-    text-decoration: none;
-    color: var(--text-secondary);
-    font-weight: 500;
-    transition: color 0.2s;
-}
-
-.nav-link:hover,
-.nav-link.active {
-    color: var(--primary-color);
-}
-
-/* Forms */
-.form-group {
-    margin-bottom: var(--space-lg);
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: var(--space-xs);
-    font-weight: 500;
-    color: var(--text-primary);
-}
-
-.form-control,
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="date"],
-select,
-textarea {
-    width: 100%;
-    padding: var(--space-sm) var(--space-md);
-    border: 1px solid var(--border-medium);
-    border-radius: var(--radius-md);
-    font-size: 0.875rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.form-control:focus,
-input:focus,
-select:focus,
-textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
-}
-
-textarea {
-    resize: vertical;
-    min-height: 80px;
-}
-
-/* Dashboard */
-.dashboard-content {
-    padding: var(--space-xl) 0;
-}
-
-.dashboard-header {
-    text-align: center;
-    margin-bottom: var(--space-2xl);
-}
-
-.dashboard-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: var(--space-sm);
-}
-
-.dashboard-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--space-lg);
-    margin-bottom: var(--space-2xl);
-}
-
-.stat-card {
-    background: white;
-    padding: var(--space-xl);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-md);
-}
-
-.stat-icon {
-    font-size: 2rem;
-}
-
-.stat-content h3 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--primary-color);
-}
-
-.dashboard-actions {
-    display: flex;
-    gap: var(--space-md);
-    justify-content: center;
-    margin-bottom: var(--space-2xl);
-    flex-wrap: wrap;
-}
-
-.recent-entries,
-.achievement-section {
-    background: white;
-    padding: var(--space-xl);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    margin-bottom: var(--space-xl);
-}
-
-.badges-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: var(--space-md);
-}
-
-.badge {
-    text-align: center;
-    padding: var(--space-md);
-    border-radius: var(--radius-md);
-    background: var(--bg-tertiary);
-    opacity: 0.5;
-    transition: opacity 0.2s;
-}
-
-.badge.earned {
-    opacity: 1;
-    background: linear-gradient(135deg, var(--success-color), var(--secondary-color));
-    color: white;
-}
-
-.badge-icon {
-    font-size: 2rem;
-    margin-bottom: var(--space-xs);
-}
-
-/* Form Sections - ENHANCED FOR COMPLETE FORM */
-.form-content {
-    padding: var(--space-xl) 0;
-}
-
-.form-header {
-    text-align: center;
-    margin-bottom: var(--space-2xl);
-}
-
-.form-progress {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-    margin-top: var(--space-lg);
-}
-
-.progress-bar {
-    flex: 1;
-    height: 8px;
-    background: var(--border-light);
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    background: var(--primary-color);
-    transition: width 0.3s ease;
-}
-
-.career-form {
-    background: white;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
-}
-
-.form-section {
-    padding: var(--space-xl);
-    border-bottom: 1px solid var(--border-light);
-}
-
-.form-section:last-child {
-    border-bottom: none;
-}
-
-.form-section h2 {
-    color: var(--primary-color);
-    margin-bottom: var(--space-lg);
-    font-size: 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--space-lg);
-}
-
-.form-actions {
-    padding: var(--space-xl);
-    display: flex;
-    gap: var(--space-md);
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-/* Category Input Container */
-.category-input-container {
-    display: flex;
-    gap: var(--space-sm);
-    align-items: flex-end;
-}
-
-.category-input-container select {
-    flex: 1;
-}
-
-/* Rating Systems */
-.rating-container {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-}
-
-.rating-stars {
-    display: flex;
-    gap: var(--space-xs);
-}
-
-.star {
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: opacity 0.2s;
-    opacity: 0.3;
-}
-
-.star.active {
-    opacity: 1;
-}
-
-.star:hover {
-    opacity: 0.7;
-}
-
-.rating-label {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    min-width: 80px;
-}
-
-/* Slider */
-.slider-container {
-    width: 100%;
-}
-
-.slider {
-    width: 100%;
-    height: 6px;
-    border-radius: 3px;
-    background: var(--border-light);
-    outline: none;
-    -webkit-appearance: none;
-}
-
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--primary-color);
-    cursor: pointer;
-}
-
-.slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--primary-color);
-    cursor: pointer;
-    border: none;
-}
-
-.slider-labels {
-    display: flex;
-    justify-content: space-between;
-    margin-top: var(--space-xs);
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-}
-
-.slider-labels span:nth-child(2) {
-    font-weight: 600;
-    color: var(--primary-color);
-}
-
-/* Skills Selection - ENHANCED */
-.skills-container {
-    border: 1px solid var(--border-medium);
-    border-radius: var(--radius-md);
-    padding: var(--space-md);
-    background: var(--bg-primary);
-}
-
-.selected-skills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-xs);
-    margin-bottom: var(--space-md);
-    min-height: 40px;
-    padding: var(--space-xs);
-    border: 1px dashed var(--border-light);
-    border-radius: var(--radius-sm);
-    background: var(--bg-secondary);
-}
-
-.selected-skills:empty::before {
-    content: "Selected skills will appear here...";
-    color: var(--text-tertiary);
-    font-style: italic;
-}
-
-.skill-tag {
-    background: var(--primary-color);
-    color: white;
-    padding: var(--space-xs) var(--space-sm);
-    border-radius: var(--radius-sm);
-    font-size: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: var(--space-xs);
-    animation: fadeIn 0.2s ease-in;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-.skill-tag-remove {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 0.875rem;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    transition: background-color 0.2s;
-}
-
-.skill-tag-remove:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.skills-input-container {
-    position: relative;
-    margin-bottom: var(--space-md);
-}
-
-.skills-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: white;
-    border: 1px solid var(--border-medium);
-    border-top: none;
-    border-radius: 0 0 var(--radius-md) var(--radius-md);
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 10;
-    display: none;
-}
-
-.skills-dropdown:not(:empty) {
-    display: block;
-}
-
-.skill-option {
-    padding: var(--space-sm) var(--space-md);
-    cursor: pointer;
-    transition: background-color 0.2s;
-    border-bottom: 1px solid var(--border-light);
-}
-
-.skill-option:last-child {
-    border-bottom: none;
-}
-
-.skill-option:hover {
-    background: var(--bg-tertiary);
-}
-
-.add-skill-container {
-    display: flex;
-    gap: var(--space-sm);
-    align-items: center;
-}
-
-.add-skill-container input {
-    flex: 1;
-}
-
-/* Entries List */
-.entries-content {
-    padding: var(--space-xl) 0;
-}
-
-.entries-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--space-xl);
-    flex-wrap: wrap;
-    gap: var(--space-md);
-}
-
-.entries-actions {
-    display: flex;
-    gap: var(--space-md);
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.search-input {
-    min-width: 250px;
-}
-
-.entry-card {
-    background: white;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    padding: var(--space-xl);
-    margin-bottom: var(--space-lg);
-    transition: box-shadow 0.2s;
-}
-
-.entry-card:hover {
-    box-shadow: var(--shadow-md);
-}
-
-.entry-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--space-md);
-    flex-wrap: wrap;
-    gap: var(--space-md);
-}
-
-.entry-date {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-}
-
-.entry-actions {
-    display: flex;
-    gap: var(--space-sm);
-}
-
-.entry-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--space-md);
-}
-
-.entry-field {
-    font-size: 0.875rem;
-}
-
-.entry-field strong {
-    color: var(--text-primary);
-}
-
-/* Analytics */
-.analytics-content {
-    padding: var(--space-xl) 0;
-}
-
-.analytics-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: var(--space-xl);
-}
-
-.chart-container {
-    background: white;
-    padding: var(--space-xl);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-}
-
-.chart-container h3 {
-    margin-bottom: var(--space-lg);
-    color: var(--primary-color);
-}
-
-/* Settings */
-.settings-content {
-    padding: var(--space-xl) 0;
-}
-
-.settings-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: var(--space-xl);
-}
-
-.settings-section {
-    background: white;
-    padding: var(--space-xl);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-}
-
-.settings-section h2 {
-    color: var(--primary-color);
-    margin-bottom: var(--space-lg);
-}
-
-.custom-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--space-sm);
-    background: var(--bg-tertiary);
-    border-radius: var(--radius-sm);
-    margin-bottom: var(--space-xs);
-}
-
-.add-item-container {
-    display: flex;
-    gap: var(--space-sm);
-    margin-top: var(--space-md);
-}
-
-.add-item-container input {
-    flex: 1;
-}
-
-.empty-state {
-    text-align: center;
-    color: var(--text-secondary);
-    font-style: italic;
-    padding: var(--space-xl);
-}
-
-/* Page Management */
-.page {
-    display: none;
-}
-
-.page.active {
-    display: block;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .hero-content h1 {
-        font-size: 2rem;
-    }
-    
-    .hero-actions {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .nav-menu {
-        flex-wrap: wrap;
-        gap: var(--space-md);
-    }
-    
-    .dashboard-stats {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-    
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-    
-    .entries-header {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .entry-header {
-        flex-direction: column;
-    }
-    
-    .analytics-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .settings-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .category-input-container {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .add-skill-container {
-        flex-direction: column;
-    }
-}
-
-@media (max-width: 480px) {
-    .container {
-        padding: 0 var(--space-sm);
-    }
-    
-    .modal-content {
-        width: 95%;
-    }
-    
-    .form-actions {
-        flex-direction: column;
-    }
-    
-    .btn--lg {
-        padding: var(--space-sm) var(--space-lg);
-    }
-    
-    .skills-container {
-        padding: var(--space-sm);
-    }
-    
-    .search-input {
-        min-width: 200px;
-    }
-}
-
-/* Focus and Accessibility */
-.btn:focus,
-input:focus,
-select:focus,
-textarea:focus {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-}
-
-.star:focus {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-}
-
-/* Print Styles */
-@media print {
-    .navbar,
-    .form-actions,
-    .entry-actions,
-    .btn {
-        display: none;
-    }
-}'''
-
-print("✅ Created complete CSS with professional styling")  
-print("📁 CSS file size:", len(complete_css), "characters")
-print("\n🎨 Styling features:")
-print("   • Professional color scheme and typography")
-print("   • Responsive grid layouts")
-print("   • Interactive form elements")
-print("   • Smooth animations and transitions")
-print("   • Mobile-optimized design")
-print("   • Accessibility features")
-print("   • Print-friendly styles")
+    <!-- Aptos Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner hidden">
+        <div class="spinner"></div>
+        <p>Analyzing your career data...</p>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification hidden">
+        <span id="notificationText"></span>
+        <button onclick="hideNotification()" class="notification-close">&times;</button>
+    </div>
+
+    <!-- Landing Page -->
+    <div id="landingPage" class="page active">
+        <div class="landing-hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="logo">
+                        <h1>📊 Document.it</h1>
+                        <p class="tagline">AI-Powered Career Analytics</p>
+                    </div>
+                    <h2>Transform Your Career Data into Actionable Insights</h2>
+                    <p class="hero-description">Track your professional growth, analyze skill development, and receive AI-powered recommendations for career advancement.</p>
+                    <div class="hero-actions">
+                        <button class="btn btn--primary btn--lg" onclick="showSignup()">Start Free Trial</button>
+                        <button class="btn btn--outline btn--lg" onclick="showLogin()">Sign In</button>
+                    </div>
+                </div>
+                <div class="hero-features">
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h3>AI Analytics</h3>
+                        <p>Perplexity AI analyzes your career progression and provides personalized insights</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <h3>Growth Tracking</h3>
+                        <p>Monitor skill development and career milestones over time</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📋</div>
+                        <h3>Smart Reports</h3>
+                        <p>Quarterly and semi-annual reports for performance reviews</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Modal -->
+    <div id="authModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="authTitle">Create Account</h2>
+                <button onclick="hideAuth()" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="authForm">
+                    <div class="form-group">
+                        <label for="authEmail">Email</label>
+                        <input type="email" id="authEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="authPassword">Password</label>
+                        <input type="password" id="authPassword" required>
+                    </div>
+                    <div id="signupFields" class="signup-only">
+                        <div class="form-group">
+                            <label for="authName">Full Name</label>
+                            <input type="text" id="authName">
+                        </div>
+                        <div class="form-group">
+                            <label for="authConfirmPassword">Confirm Password</label>
+                            <input type="password" id="authConfirmPassword">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full">
+                        <span id="authButtonText">Create Account</span>
+                    </button>
+                </form>
+                <div class="auth-switch">
+                    <p id="authSwitchText">Already have an account? <a href="#" onclick="toggleAuthMode()">Sign In</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="page hidden">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h2>📊 Document.it</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="#" onclick="showDashboard()" class="nav-link active">Dashboard</a>
+                <a href="#" onclick="showForm()" class="nav-link">New Entry</a>
+                <a href="#" onclick="showEntries()" class="nav-link">My Entries</a>
+                <a href="#" onclick="showAnalytics()" class="nav-link">AI Analytics</a>
+                <a href="#" onclick="showReports()" class="nav-link">Reports</a>
+                <a href="#" onclick="showSettings()" class="nav-link">Settings</a>
+                <a href="#" onclick="logout()" class="nav-link">Logout</a>
+            </div>
+        </nav>
+
+        <div class="dashboard-content">
+            <div class="container">
+                <div class="dashboard-header">
+                    <h1>Welcome back, <span id="userName">User</span>!</h1>
+                    <p>Your AI-powered career analytics dashboard</p>
+                </div>
+
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-content">
+                            <h3 id="totalEntries">0</h3>
+                            <p>Career Entries</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-content">
+                            <h3 id="skillsTracked">0</h3>
+                            <p>Skills Tracked</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-content">
+                            <h3 id="growthScore">0</h3>
+                            <p>Growth Score</p>
+                        </div>
+                    </div>
+                    <div class="stat-card ai-stat">
+                        <div class="stat-icon">🤖</div>
+                        <div class="stat-content">
+                            <h3 id="aiInsights">0</h3>
+                            <p>AI Insights</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-actions">
+                    <button class="btn btn--primary" onclick="showForm()">📝 New Entry</button>
+                    <button class="btn btn--secondary" onclick="generateAIInsights()">🤖 Generate AI Insights</button>
+                    <button class="btn btn--outline" onclick="showAnalytics()">📊 View Analytics</button>
+                    <button class="btn btn--outline" onclick="generateReport()">📋 Generate Report</button>
+                </div>
+
+                <div class="ai-insights-section">
+                    <h2>🤖 Latest AI Insights</h2>
+                    <div id="aiInsightsList" class="ai-insights-container">
+                        <p class="empty-state">Generate your first AI insights to see personalized career recommendations!</p>
+                    </div>
+                </div>
+
+                <div class="recent-entries">
+                    <h2>Recent Entries</h2>
+                    <div id="recentEntriesList">
+                        <p class="empty-state">No entries yet. Create your first career entry!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Page (same 14 fields as before) -->
+    <div id="formPage" class="page hidden">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h2>📊 Document.it</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="#" onclick="showDashboard()" class="nav-link">Dashboard</a>
+                <a href="#" onclick="showForm()" class="nav-link active">New Entry</a>
+                <a href="#" onclick="showEntries()" class="nav-link">My Entries</a>
+                <a href="#" onclick="showAnalytics()" class="nav-link">AI Analytics</a>
+                <a href="#" onclick="showReports()" class="nav-link">Reports</a>
+                <a href="#" onclick="showSettings()" class="nav-link">Settings</a>
+                <a href="#" onclick="logout()" class="nav-link">Logout</a>
+            </div>
+        </nav>
+
+        <div class="form-content">
+            <div class="container">
+                <div class="form-header">
+                    <h1 id="formTitle">New Career Entry</h1>
+                    <div class="form-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="formProgress"></div>
+                        </div>
+                        <span id="progressText">0% Complete</span>
+                    </div>
+                </div>
+
+                <form id="careerForm" class="career-form">
+                    <!-- Week Overview -->
+                    <div class="form-section">
+                        <h2>📅 Week Overview</h2>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="weekDate">Week Starting Date *</label>
+                                <input type="date" id="weekDate" name="weekDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="projectName">Project or Client Name</label>
+                                <input type="text" id="projectName" name="projectName" placeholder="Optional">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Responsibilities -->
+                    <div class="form-section">
+                        <h2>💼 Responsibilities</h2>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="responsibilityCategory">Responsibility Category *</label>
+                                <div class="category-input-container">
+                                    <select id="responsibilityCategory" name="responsibilityCategory" required>
+                                        <option value="">Select a category</option>
+                                    </select>
+                                    <button type="button" class="btn btn--sm btn--outline" onclick="addCustomCategory()">+ Add Custom</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="responsibilityDescription">Responsibility Description *</label>
+                            <textarea id="responsibilityDescription" name="responsibilityDescription" placeholder="Describe your key responsibilities this week..." required rows="4"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="difficultyRating">Difficulty Rating *</label>
+                                <div class="rating-container">
+                                    <div class="rating-stars" id="difficultyStars">
+                                        <span class="star" data-rating="1">⭐</span>
+                                        <span class="star" data-rating="2">⭐</span>
+                                        <span class="star" data-rating="3">⭐</span>
+                                        <span class="star" data-rating="4">⭐</span>
+                                        <span class="star" data-rating="5">⭐</span>
+                                    </div>
+                                    <span class="rating-label" id="difficultyLabel">Not rated</span>
+                                </div>
+                                <input type="hidden" id="difficultyRating" name="difficultyRating" value="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="impactAssessment">Impact Assessment</label>
+                            <textarea id="impactAssessment" name="impactAssessment" placeholder="Optional: Describe the effect of your work on team or company goals..." rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="leadership">Leadership & Initiative</label>
+                            <textarea id="leadership" name="leadership" placeholder="Optional: Document any leadership actions taken..." rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Skills -->
+                    <div class="form-section">
+                        <h2>🎯 Skills & Development</h2>
+                        <div class="form-group">
+                            <label for="skillsUsed">Skills Used *</label>
+                            <div class="skills-container">
+                                <div class="selected-skills" id="selectedSkills">
+                                    <!-- Selected skills will appear here -->
+                                </div>
+                                <div class="skills-input-container">
+                                    <input type="text" id="skillSearch" placeholder="Search and select skills..." autocomplete="off">
+                                    <div class="skills-dropdown" id="skillsDropdown">
+                                        <!-- Skills options will appear here -->
+                                    </div>
+                                </div>
+                                <div class="add-skill-container">
+                                    <input type="text" id="newSkill" placeholder="Add new skill...">
+                                    <button type="button" class="btn btn--sm btn--primary" onclick="addNewSkill()">Add Skill</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="proficiencyLevel">Proficiency Level *</label>
+                                <select id="proficiencyLevel" name="proficiencyLevel" required>
+                                    <option value="">Select level</option>
+                                    <option value="Beginner">Beginner</option>
+                                    <option value="Intermediate">Intermediate</option>
+                                    <option value="Advanced">Advanced</option>
+                                    <option value="Expert">Expert</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="usageIntensity">Usage Intensity *</label>
+                                <div class="rating-container">
+                                    <div class="rating-stars" id="intensityStars">
+                                        <span class="star" data-rating="1">⭐</span>
+                                        <span class="star" data-rating="2">⭐</span>
+                                        <span class="star" data-rating="3">⭐</span>
+                                        <span class="star" data-rating="4">⭐</span>
+                                        <span class="star" data-rating="5">⭐</span>
+                                    </div>
+                                    <span class="rating-label" id="intensityLabel">Not rated</span>
+                                </div>
+                                <input type="hidden" id="usageIntensity" name="usageIntensity" value="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="skillGoals">Skill Development Goals</label>
+                            <textarea id="skillGoals" name="skillGoals" placeholder="Optional: Set goals for new skills you want to develop..." rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Collaboration -->
+                    <div class="form-section">
+                        <h2>🤝 Collaboration & Networking</h2>
+                        <div class="form-group">
+                            <label for="networking">Networking & Collaboration</label>
+                            <textarea id="networking" name="networking" placeholder="Optional: Track cross-functional teamwork and networking activities..." rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Well-being -->
+                    <div class="form-section">
+                        <h2>💪 Well-being</h2>
+                        <div class="form-group">
+                            <label for="mentalHealth">Weekly Mental Health Rating *</label>
+                            <div class="slider-container">
+                                <input type="range" id="mentalHealth" name="mentalHealth" min="0" max="10" value="5" class="slider">
+                                <div class="slider-labels">
+                                    <span>0 (Poor)</span>
+                                    <span id="mentalHealthValue">5</span>
+                                    <span>10 (Excellent)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reflections -->
+                    <div class="form-section">
+                        <h2>💭 Reflections</h2>
+                        <div class="form-group">
+                            <label for="notes">Notes or Reflections *</label>
+                            <textarea id="notes" name="notes" placeholder="Share your thoughts, learnings, challenges, or any additional reflections from this week..." required rows="4"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn--outline" onclick="saveDraft()">Save Draft</button>
+                        <button type="submit" class="btn btn--primary" id="submitBtn">Save Entry</button>
+                        <button type="button" class="btn btn--secondary" onclick="showDashboard()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: AI Analytics Page -->
+    <div id="analyticsPage" class="page hidden">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h2>📊 Document.it</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="#" onclick="showDashboard()" class="nav-link">Dashboard</a>
+                <a href="#" onclick="showForm()" class="nav-link">New Entry</a>
+                <a href="#" onclick="showEntries()" class="nav-link">My Entries</a>
+                <a href="#" onclick="showAnalytics()" class="nav-link active">AI Analytics</a>
+                <a href="#" onclick="showReports()" class="nav-link">Reports</a>
+                <a href="#" onclick="showSettings()" class="nav-link">Settings</a>
+                <a href="#" onclick="logout()" class="nav-link">Logout</a>
+            </div>
+        </nav>
+
+        <div class="analytics-content">
+            <div class="container">
+                <div class="analytics-header">
+                    <h1>🤖 AI-Powered Career Analytics</h1>
+                    <button class="btn btn--primary" onclick="generateAIInsights()">Generate New Insights</button>
+                </div>
+                
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>🎯 Skill Growth Analysis</h3>
+                        <div id="skillGrowthChart">
+                            <canvas id="skillGrowthCanvas"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3>📈 Career Progression</h3>
+                        <div id="careerProgressionInsight">
+                            <p class="loading-text">Generate insights to see your career progression analysis...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3>💡 Growth Recommendations</h3>
+                        <div id="growthRecommendations">
+                            <p class="loading-text">AI recommendations will appear here after analysis...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3>🎤 Performance Review Prep</h3>
+                        <div id="performanceReviewPrep">
+                            <p class="loading-text">Generate talking points for your next performance review...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Reports Page -->
+    <div id="reportsPage" class="page hidden">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h2>📊 Document.it</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="#" onclick="showDashboard()" class="nav-link">Dashboard</a>
+                <a href="#" onclick="showForm()" class="nav-link">New Entry</a>
+                <a href="#" onclick="showEntries()" class="nav-link">My Entries</a>
+                <a href="#" onclick="showAnalytics()" class="nav-link">AI Analytics</a>
+                <a href="#" onclick="showReports()" class="nav-link active">Reports</a>
+                <a href="#" onclick="showSettings()" class="nav-link">Settings</a>
+                <a href="#" onclick="logout()" class="nav-link">Logout</a>
+            </div>
+        </nav>
+
+        <div class="reports-content">
+            <div class="container">
+                <h1>📋 Career Reports</h1>
+                
+                <div class="report-actions">
+                    <button class="btn btn--primary" onclick="generateQuarterlyReport()">Generate Quarterly Report</button>
+                    <button class="btn btn--secondary" onclick="generateSemiAnnualReport()">Generate Semi-Annual Report</button>
+                    <button class="btn btn--outline" onclick="scheduleAutomaticReports()">Schedule Automatic Reports</button>
+                </div>
+
+                <div class="reports-list" id="reportsList">
+                    <p class="empty-state">No reports generated yet. Create your first report!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Entries Page -->
+    <div id="entriesPage" class="page hidden">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h2>📊 Document.it</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="#" onclick="showDashboard()" class="nav-link">Dashboard</a>
+                <a href="#" onclick="showForm()" class="nav-link">New Entry</a>
+                <a href="#" onclick="showEntries()" class="nav-link active">My Entries</a>
+                <a href="#" onclick="showAnalytics()" class="nav-link">AI Analytics</a>
+                <a href="#" onclick="showReports()" class="nav-link">Reports</a>
+                <a href="#" onclick="showSettings()" class="nav-link">Settings</a>
+                <a href="#" onclick="logout()" class="nav-link">Logout</a>
+            </div>
+        </nav>
+
+        <div class="entries-content">
+            <div class="container">
+                <div class="entries-header">
+                    <h1>My Career Entries</h1>
+                    <div class="entries-actions">
+                        <input type="text" id="searchEntries" placeholder="Search entries..." class="search-input">
+                        <button class="btn btn--primary" onclick="showForm()">+ New Entry</button>
+                        <button class="btn btn--outline" onclick="exportData()">📥 Export Data</button>
+                    </div>
+                </div>
+
+                <div class="entries-list" id="entriesList">
+                    <!-- Entries will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Page -->
+    <div id="settingsPage" class="page hidden">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h2>📊 Document.it</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="#" onclick="showDashboard()" class="nav-link">Dashboard</a>
+                <a href="#" onclick="showForm()" class="nav-link">New Entry</a>
+                <a href="#" onclick="showEntries()" class="nav-link">My Entries</a>
+                <a href="#" onclick="showAnalytics()" class="nav-link">AI Analytics</a>
+                <a href="#" onclick="showReports()" class="nav-link">Reports</a>
+                <a href="#" onclick="showSettings()" class="nav-link active">Settings</a>
+                <a href="#" onclick="logout()" class="nav-link">Logout</a>
+            </div>
+        </nav>
+
+        <div class="settings-content">
+            <div class="container">
+                <h1>⚙️ Settings</h1>
+                
+                <div class="settings-grid">
+                    <div class="settings-section">
+                        <h2>Profile</h2>
+                        <div class="form-group">
+                            <label for="settingsName">Full Name</label>
+                            <input type="text" id="settingsName" placeholder="Your name">
+                        </div>
+                        <div class="form-group">
+                            <label for="settingsEmail">Email</label>
+                            <input type="email" id="settingsEmail" placeholder="Your email" readonly>
+                        </div>
+                        <button class="btn btn--primary" onclick="updateProfile()">Update Profile</button>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2>🤖 AI Configuration</h2>
+                        <div class="form-group">
+                            <label for="perplexityApiKey">Perplexity API Key</label>
+                            <input type="password" id="perplexityApiKey" placeholder="Enter your Perplexity API key">
+                            <small>Get your API key from <a href="https://www.perplexity.ai/settings/api" target="_blank">Perplexity Settings</a></small>
+                        </div>
+                        <button class="btn btn--primary" onclick="saveAPISettings()">Save API Settings</button>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2>📋 Report Preferences</h2>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="autoQuarterlyReports" checked>
+                                Generate quarterly reports automatically
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="autoSemiAnnualReports" checked>
+                                Generate semi-annual reports automatically
+                            </label>
+                        </div>
+                        <button class="btn btn--primary" onclick="saveReportSettings()">Save Report Settings</button>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2>Custom Categories</h2>
+                        <div id="customCategoriesList"></div>
+                        <div class="add-item-container">
+                            <input type="text" id="newCategory" placeholder="Add new category...">
+                            <button class="btn btn--primary" onclick="addCustomCategoryFromSettings()">Add</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2>Custom Skills</h2>
+                        <div id="customSkillsList"></div>
+                        <div class="add-item-container">
+                            <input type="text" id="newSkillSetting" placeholder="Add new skill...">
+                            <button class="btn btn--primary" onclick="addCustomSkillFromSettings()">Add</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2>Data Management</h2>
+                        <button class="btn btn--outline" onclick="exportData()">📥 Export All Data</button>
+                        <button class="btn btn--outline" onclick="importData()">📤 Import Data</button>
+                        <button class="btn btn--danger" onclick="deleteAccount()">🗑️ Delete Account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>'''
+
+print("✅ Created Document.it HTML with AI features")
+print("📁 HTML size:", len(document_it_html), "characters")
+print("\n🎨 New features added:")
+print("   • Document.it branding and Aptos font")
+print("   • AI Analytics dashboard page")
+print("   • Reports generation page")
+print("   • Perplexity API integration setup")
+print("   • Firebase integration ready")
+print("   • PDF report generation")
+print("   • White/ivory color scheme with blue accents")
