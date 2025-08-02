@@ -1,4 +1,5 @@
-// CareerTrack MVP - Complete Enhanced Version
+# Create the enhanced JavaScript with full functionality for all 14 fields
+enhanced_js = '''// CareerTrack MVP - Complete Enhanced Version
 // This version includes all 14 fields with full functionality
 
 console.log('CareerTrack MVP - Enhanced JavaScript loaded');
@@ -56,16 +57,16 @@ const achievementBadges = [
 // Utility Functions
 function showNotification(message, type = 'success') {
     console.log(`NOTIFICATION [${type.toUpperCase()}]: ${message}`);
-
+    
     try {
         const notification = document.getElementById('notification');
         const notificationText = document.getElementById('notificationText');
-
+        
         if (notification && notificationText) {
             notificationText.textContent = message;
             notification.className = `notification ${type}`;
             notification.classList.remove('hidden');
-
+            
             setTimeout(() => {
                 notification.classList.add('hidden');
             }, 5000);
@@ -153,13 +154,13 @@ function showSignup() {
         const buttonText = document.getElementById('authButtonText');
         const switchText = document.getElementById('authSwitchText');
         const signupFields = document.getElementById('signupFields');
-
+        
         if (title) title.textContent = 'Sign Up';
         if (buttonText) buttonText.textContent = 'Create Account';
         if (switchText) switchText.innerHTML = 'Already have an account? <a href="#" onclick="toggleAuthMode()">Sign In</a>';
         if (signupFields) signupFields.style.display = 'block';
         if (modal) modal.classList.remove('hidden');
-
+        
         console.log('Signup modal shown successfully');
     } catch (error) {
         console.error('Error showing signup modal:', error);
@@ -175,13 +176,13 @@ function showLogin() {
         const buttonText = document.getElementById('authButtonText');
         const switchText = document.getElementById('authSwitchText');
         const signupFields = document.getElementById('signupFields');
-
+        
         if (title) title.textContent = 'Sign In';
         if (buttonText) buttonText.textContent = 'Sign In';
-        if (switchText) switchText.innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleAuthMode()">Sign Up</a>';
+        if (switchText) switchText.innerHTML = 'Don\\'t have an account? <a href="#" onclick="toggleAuthMode()">Sign Up</a>';
         if (signupFields) signupFields.style.display = 'none';
         if (modal) modal.classList.remove('hidden');
-
+        
         console.log('Login modal shown successfully');
     } catch (error) {
         console.error('Error showing login modal:', error);
@@ -194,10 +195,10 @@ function hideAuth() {
     try {
         const modal = document.getElementById('authModal');
         const form = document.getElementById('authForm');
-
+        
         if (modal) modal.classList.add('hidden');
         if (form) form.reset();
-
+        
         console.log('Auth modal hidden successfully');
     } catch (error) {
         console.error('Error hiding auth modal:', error);
@@ -220,42 +221,42 @@ function toggleAuthMode() {
 function handleAuth(event) {
     event.preventDefault();
     console.log('=== Starting authentication process ===');
-
+    
     try {
         const email = document.getElementById('authEmail')?.value?.trim();
         const password = document.getElementById('authPassword')?.value;
         const name = document.getElementById('authName')?.value?.trim();
         const title = document.getElementById('authTitle');
         const isSignup = title && title.textContent === 'Sign Up';
-
+        
         console.log('Auth details:', { 
             email: email ? 'provided' : 'missing', 
             password: password ? 'provided' : 'missing',
             name: name ? 'provided' : 'missing',
             isSignup 
         });
-
+        
         if (!email || !password) {
             showNotification('Please fill in all required fields', 'error');
             return;
         }
-
+        
         if (isSignup) {
             const confirmPassword = document.getElementById('authConfirmPassword')?.value;
             if (password !== confirmPassword) {
                 showNotification('Passwords do not match', 'error');
                 return;
             }
-
+            
             currentUser = {
                 id: generateId(),
                 email: email,
                 name: name || email.split('@')[0],
                 createdAt: new Date().toISOString()
             };
-
+            
             console.log('Creating new user:', currentUser);
-
+            
             if (saveToStorage('currentUser', currentUser)) {
                 showNotification('Account created successfully!', 'success');
                 console.log('User saved to storage successfully');
@@ -269,14 +270,14 @@ function handleAuth(event) {
                 showNotification('Invalid credentials or no account found', 'error');
                 return;
             }
-
+            
             currentUser = existingUser;
             showNotification('Welcome back!', 'success');
             console.log('User logged in successfully:', currentUser);
         }
-
+        
         hideAuth();
-
+        
         console.log('=== Starting navigation to dashboard ===');
         setTimeout(() => {
             try {
@@ -288,7 +289,7 @@ function handleAuth(event) {
                 showNotification('Error loading dashboard. Please refresh the page.', 'error');
             }
         }, 1000);
-
+        
     } catch (error) {
         console.error('Authentication error:', error);
         showNotification('Authentication failed: ' + error.message, 'error');
@@ -303,7 +304,7 @@ function logout() {
         customCategories = [];
         customSkills = [];
         selectedSkills = [];
-
+        
         showPage('landingPage');
         showNotification('Logged out successfully', 'success');
     } catch (error) {
@@ -315,16 +316,16 @@ function logout() {
 // Navigation Functions
 function showPage(pageId) {
     console.log(`=== Navigating to page: ${pageId} ===`);
-
+    
     try {
         const allPages = document.querySelectorAll('.page');
         console.log(`Found ${allPages.length} page elements`);
-
+        
         allPages.forEach((page, index) => {
             page.classList.add('hidden');
             page.classList.remove('active');
         });
-
+        
         const targetPage = document.getElementById(pageId);
         if (targetPage) {
             targetPage.classList.remove('hidden');
@@ -334,7 +335,7 @@ function showPage(pageId) {
         } else {
             console.error(`Page not found: ${pageId}`);
             showNotification('Navigation error - page not found', 'error');
-
+            
             const landingPage = document.getElementById('landingPage');
             if (landingPage) {
                 landingPage.classList.remove('hidden');
@@ -352,7 +353,7 @@ function showPage(pageId) {
 
 function showDashboard() {
     console.log('=== Showing dashboard ===');
-
+    
     try {
         if (!currentUser) {
             console.error('No current user when showing dashboard');
@@ -360,15 +361,15 @@ function showDashboard() {
             showPage('landingPage');
             return false;
         }
-
+        
         console.log('Current user:', currentUser.name);
-
+        
         const success = showPage('dashboardPage');
         if (success) {
             loadDashboardData();
             console.log('Dashboard loaded successfully');
         }
-
+        
         return success;
     } catch (error) {
         console.error('Error showing dashboard:', error);
@@ -380,7 +381,7 @@ function showDashboard() {
 
 function showForm(entryId = null) {
     console.log('Showing form page', entryId ? `(editing ${entryId})` : '(new entry)');
-
+    
     try {
         const success = showPage('formPage');
         if (success) {
@@ -408,7 +409,7 @@ function showForm(entryId = null) {
 
 function showEntries() {
     console.log('Showing entries page');
-
+    
     try {
         const success = showPage('entriesPage');
         if (success) {
@@ -424,7 +425,7 @@ function showEntries() {
 
 function showAnalytics() {
     console.log('Showing analytics page');
-
+    
     try {
         const success = showPage('analyticsPage');
         if (success) {
@@ -440,7 +441,7 @@ function showAnalytics() {
 
 function showSettings() {
     console.log('Showing settings page');
-
+    
     try {
         const success = showPage('settingsPage');
         if (success) {
@@ -460,21 +461,21 @@ function loadUserData() {
         console.error('No current user when loading data');
         throw new Error('No current user');
     }
-
+    
     console.log('Loading data for user:', currentUser.id);
-
+    
     try {
         careerEntries = loadFromStorage(`entries_${currentUser.id}`, []);
         customCategories = loadFromStorage(`categories_${currentUser.id}`, []);
         customSkills = loadFromStorage(`skills_${currentUser.id}`, []);
-
+        
         const userName = document.getElementById('userName');
         if (userName) {
             userName.textContent = currentUser.name;
         }
-
+        
         initializeFormDropdowns();
-
+        
         console.log('User data loaded successfully:', {
             entries: careerEntries.length,
             categories: customCategories.length,
@@ -491,22 +492,22 @@ function initializeFormDropdowns() {
         const categorySelect = document.getElementById('responsibilityCategory');
         if (categorySelect) {
             categorySelect.innerHTML = '<option value="">Select a category</option>';
-
+            
             [...defaultCategories, ...customCategories].forEach(category => {
                 const option = document.createElement('option');
                 option.value = category;
                 option.textContent = category;
                 categorySelect.appendChild(option);
             });
-
+            
             console.log('Category dropdown initialized');
         }
-
+        
         initializeSkillsDropdown();
-
+        
         // Initialize skills input functionality
         initializeSkillsInput();
-
+        
     } catch (error) {
         console.error('Error initializing form dropdowns:', error);
     }
@@ -516,9 +517,9 @@ function initializeSkillsDropdown() {
     try {
         const skillsDropdown = document.getElementById('skillsDropdown');
         if (!skillsDropdown) return;
-
+        
         const allSkills = [...defaultSkills, ...customSkills];
-
+        
         skillsDropdown.innerHTML = '';
         allSkills.forEach(skill => {
             if (!selectedSkills.includes(skill)) {
@@ -529,7 +530,7 @@ function initializeSkillsDropdown() {
                 skillsDropdown.appendChild(option);
             }
         });
-
+        
         console.log('Skills dropdown initialized');
     } catch (error) {
         console.error('Error initializing skills dropdown:', error);
@@ -539,20 +540,20 @@ function initializeSkillsDropdown() {
 // Dashboard Functions
 function loadDashboardData() {
     console.log('Loading dashboard data...');
-
+    
     try {
         const totalEntries = careerEntries.length;
         const currentStreak = calculateStreak();
         const badgeCount = calculateEarnedBadges().length;
         const avgRating = calculateAverageRating();
-
+        
         const stats = {
             'totalEntries': totalEntries,
             'currentStreak': currentStreak,
             'badgeCount': badgeCount,
             'avgRating': avgRating.toFixed(1)
         };
-
+        
         Object.entries(stats).forEach(([id, value]) => {
             const element = document.getElementById(id);
             if (element) {
@@ -561,10 +562,10 @@ function loadDashboardData() {
                 console.warn(`Dashboard stat element not found: ${id}`);
             }
         });
-
+        
         loadRecentEntries();
         loadAchievementBadges();
-
+        
         console.log('Dashboard data loaded successfully:', stats);
     } catch (error) {
         console.error('Error loading dashboard data:', error);
@@ -575,11 +576,11 @@ function loadDashboardData() {
 function calculateStreak() {
     try {
         if (careerEntries.length === 0) return 0;
-
+        
         const sortedEntries = [...careerEntries].sort((a, b) => new Date(b.weekDate) - new Date(a.weekDate));
         let streak = 0;
         let currentWeekStart = getCurrentWeekStart();
-
+        
         for (const entry of sortedEntries) {
             if (entry.weekDate === currentWeekStart) {
                 streak++;
@@ -590,7 +591,7 @@ function calculateStreak() {
                 break;
             }
         }
-
+        
         return streak;
     } catch (error) {
         console.error('Error calculating streak:', error);
@@ -601,11 +602,11 @@ function calculateStreak() {
 function calculateEarnedBadges() {
     try {
         const earned = [];
-
+        
         if (careerEntries.length >= 1) earned.push(achievementBadges[0]);
         if (calculateStreak() >= 5) earned.push(achievementBadges[1]);
         if (careerEntries.length >= 4) earned.push(achievementBadges[2]);
-
+        
         const uniqueSkills = new Set();
         careerEntries.forEach(entry => {
             if (entry.skillsUsed) {
@@ -613,12 +614,12 @@ function calculateEarnedBadges() {
             }
         });
         if (uniqueSkills.size >= 10) earned.push(achievementBadges[3]);
-
+        
         if (customCategories.length >= 3) earned.push(achievementBadges[4]);
         if (careerEntries.length >= 1) earned.push(achievementBadges[5]);
         if (careerEntries.length >= 10) earned.push(achievementBadges[6]);
         if (uniqueSkills.size >= 25) earned.push(achievementBadges[7]);
-
+        
         return earned;
     } catch (error) {
         console.error('Error calculating badges:', error);
@@ -629,7 +630,7 @@ function calculateEarnedBadges() {
 function calculateAverageRating() {
     try {
         if (careerEntries.length === 0) return 0;
-
+        
         const total = careerEntries.reduce((sum, entry) => sum + (entry.difficultyRating || 0), 0);
         return total / careerEntries.length;
     } catch (error) {
@@ -645,14 +646,14 @@ function loadRecentEntries() {
             console.warn('Recent entries list element not found');
             return;
         }
-
+        
         const recent = careerEntries.slice(-3).reverse();
-
+        
         if (recent.length === 0) {
             recentEntriesList.innerHTML = '<p class="empty-state">No entries yet. Create your first weekly entry!</p>';
             return;
         }
-
+        
         recentEntriesList.innerHTML = recent.map(entry => `
             <div class="entry-card">
                 <div class="entry-header">
@@ -666,7 +667,7 @@ function loadRecentEntries() {
                 <p><strong>Difficulty:</strong> ${entry.difficultyRating}/5</p>
             </div>
         `).join('');
-
+        
         console.log('Recent entries loaded');
     } catch (error) {
         console.error('Error loading recent entries:', error);
@@ -680,9 +681,9 @@ function loadAchievementBadges() {
             console.warn('Badges list element not found');
             return;
         }
-
+        
         const earnedBadges = calculateEarnedBadges();
-
+        
         badgesList.innerHTML = achievementBadges.map(badge => {
             const isEarned = earnedBadges.some(earned => earned.name === badge.name);
             return `
@@ -693,7 +694,7 @@ function loadAchievementBadges() {
                 </div>
             `;
         }).join('');
-
+        
         console.log('Achievement badges loaded');
     } catch (error) {
         console.error('Error loading achievement badges:', error);
@@ -707,18 +708,18 @@ function resetForm() {
         if (form) {
             form.reset();
         }
-
+        
         const weekDate = document.getElementById('weekDate');
         if (weekDate) {
             weekDate.value = getCurrentWeekStart();
         }
-
+        
         selectedSkills = [];
         updateSelectedSkills();
         updateFormProgress();
         initializeRatingStars();
         initializeSlider();
-
+        
         console.log('Form reset successfully');
     } catch (error) {
         console.error('Error resetting form:', error);
@@ -789,14 +790,14 @@ function initializeRatingStars() {
         ['difficultyStars', 'intensityStars'].forEach(id => {
             const container = document.getElementById(id);
             if (!container) return;
-
+            
             const stars = container.querySelectorAll('.star');
-
+            
             stars.forEach((star, index) => {
                 star.onclick = () => {
                     const rating = index + 1;
                     updateRatingStars(id, rating);
-
+                    
                     if (id === 'difficultyStars') {
                         const difficultyRating = document.getElementById('difficultyRating');
                         const difficultyLabel = document.getElementById('difficultyLabel');
@@ -808,12 +809,12 @@ function initializeRatingStars() {
                         if (usageIntensity) usageIntensity.value = rating;
                         if (intensityLabel) intensityLabel.textContent = getRatingLabel(rating);
                     }
-
+                    
                     updateFormProgress();
                 };
             });
         });
-
+        
         console.log('Rating stars initialized');
     } catch (error) {
         console.error('Error initializing rating stars:', error);
@@ -824,9 +825,9 @@ function updateRatingStars(containerId, rating) {
     try {
         const container = document.getElementById(containerId);
         if (!container) return;
-
+        
         const stars = container.querySelectorAll('.star');
-
+        
         stars.forEach((star, index) => {
             if (index < rating) {
                 star.classList.add('active');
@@ -848,14 +849,14 @@ function initializeSlider() {
     try {
         const slider = document.getElementById('mentalHealth');
         const valueDisplay = document.getElementById('mentalHealthValue');
-
+        
         if (slider && valueDisplay) {
             slider.oninput = function() {
                 valueDisplay.textContent = this.value;
                 updateFormProgress();
             };
         }
-
+        
         console.log('Slider initialized');
     } catch (error) {
         console.error('Error initializing slider:', error);
@@ -866,7 +867,7 @@ function updateFormProgress() {
     try {
         const form = document.getElementById('careerForm');
         if (!form) return;
-
+        
         const requiredFields = form.querySelectorAll('[required]');
         const filledFields = Array.from(requiredFields).filter(field => {
             if (field.type === 'hidden') {
@@ -874,17 +875,17 @@ function updateFormProgress() {
             }
             return field.value.trim() !== '';
         });
-
+        
         // Add skills check (required but not marked as required in HTML)
         if (selectedSkills.length > 0) {
             filledFields.push({});
         }
-
+        
         const progress = (filledFields.length / (requiredFields.length + 1)) * 100;
-
+        
         const formProgress = document.getElementById('formProgress');
         const progressText = document.getElementById('progressText');
-
+        
         if (formProgress) formProgress.style.width = progress + '%';
         if (progressText) progressText.textContent = Math.round(progress) + '% Complete';
     } catch (error) {
@@ -897,42 +898,42 @@ function initializeSkillsInput() {
     try {
         const skillSearch = document.getElementById('skillSearch');
         const skillsDropdown = document.getElementById('skillsDropdown');
-
+        
         if (!skillSearch || !skillsDropdown) {
             console.warn('Skills input elements not found');
             return;
         }
-
+        
         skillSearch.oninput = function() {
             const query = this.value.toLowerCase();
             const allSkills = [...defaultSkills, ...customSkills];
             const filteredSkills = allSkills.filter(skill => 
                 skill.toLowerCase().includes(query) && !selectedSkills.includes(skill)
             );
-
+            
             skillsDropdown.innerHTML = filteredSkills.map(skill => `
                 <div class="skill-option" onclick="addSkill('${skill}')">${skill}</div>
             `).join('');
-
+            
             if (query && filteredSkills.length > 0) {
                 skillsDropdown.style.display = 'block';
             } else {
                 skillsDropdown.style.display = 'none';
             }
         };
-
+        
         skillSearch.onfocus = function() {
             if (this.value) {
                 skillsDropdown.style.display = 'block';
             }
         };
-
+        
         skillSearch.onblur = function() {
             setTimeout(() => {
                 skillsDropdown.style.display = 'none';
             }, 200);
         };
-
+        
         console.log('Skills input initialized');
     } catch (error) {
         console.error('Error initializing skills input:', error);
@@ -944,16 +945,16 @@ function addSkill(skill) {
         if (!selectedSkills.includes(skill)) {
             selectedSkills.push(skill);
             updateSelectedSkills();
-
+            
             const skillSearch = document.getElementById('skillSearch');
             if (skillSearch) skillSearch.value = '';
-
+            
             const skillsDropdown = document.getElementById('skillsDropdown');
             if (skillsDropdown) skillsDropdown.style.display = 'none';
-
+            
             initializeSkillsDropdown();
             updateFormProgress();
-
+            
             console.log('Skill added:', skill);
         }
     } catch (error) {
@@ -967,7 +968,7 @@ function removeSkill(skill) {
         updateSelectedSkills();
         initializeSkillsDropdown();
         updateFormProgress();
-
+        
         console.log('Skill removed:', skill);
     } catch (error) {
         console.error('Error removing skill:', error);
@@ -978,14 +979,14 @@ function updateSelectedSkills() {
     try {
         const container = document.getElementById('selectedSkills');
         if (!container) return;
-
+        
         container.innerHTML = selectedSkills.map(skill => `
             <div class="skill-tag">
                 ${skill}
                 <button type="button" class="skill-tag-remove" onclick="removeSkill('${skill}')">&times;</button>
             </div>
         `).join('');
-
+        
         console.log('Selected skills updated:', selectedSkills);
     } catch (error) {
         console.error('Error updating selected skills:', error);
@@ -996,26 +997,26 @@ function addNewSkill() {
     try {
         const input = document.getElementById('newSkill');
         if (!input) return;
-
+        
         const skill = input.value.trim();
-
+        
         if (!skill) {
             showNotification('Please enter a skill name', 'error');
             return;
         }
-
+        
         if ([...defaultSkills, ...customSkills].includes(skill)) {
             showNotification('Skill already exists', 'error');
             return;
         }
-
+        
         customSkills.push(skill);
         saveToStorage(`skills_${currentUser.id}`, customSkills);
-
+        
         addSkill(skill);
         input.value = '';
         initializeFormDropdowns();
-
+        
         showNotification('New skill added!', 'success');
         console.log('New custom skill added:', skill);
     } catch (error) {
@@ -1028,16 +1029,16 @@ function addNewSkill() {
 function handleFormSubmit(event) {
     event.preventDefault();
     console.log('=== Handling form submission ===');
-
+    
     try {
         // Validate required fields
         if (selectedSkills.length === 0) {
             showNotification('Please select at least one skill', 'error');
             return;
         }
-
+        
         const formData = new FormData(document.getElementById('careerForm'));
-
+        
         // Create entry with all 14 fields
         const entry = {
             id: isEditMode ? editingEntryId : generateId(),
@@ -1073,9 +1074,9 @@ function handleFormSubmit(event) {
             createdAt: isEditMode ? careerEntries.find(e => e.id === editingEntryId).createdAt : new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
-
+        
         console.log('Entry data:', entry);
-
+        
         if (isEditMode) {
             const index = careerEntries.findIndex(e => e.id === editingEntryId);
             if (index !== -1) {
@@ -1092,16 +1093,16 @@ function handleFormSubmit(event) {
             showNotification('Entry saved successfully!', 'success');
             console.log('New entry saved');
         }
-
+        
         saveToStorage(`entries_${currentUser.id}`, careerEntries);
-
+        
         // Reset form state
         isEditMode = false;
         editingEntryId = null;
         selectedSkills = [];
-
+        
         showDashboard();
-
+        
         console.log('=== Form submission completed successfully ===');
     } catch (error) {
         console.error('Error handling form submission:', error);
@@ -1124,24 +1125,24 @@ function addCustomCategory() {
     try {
         const category = prompt('Enter new category name:');
         if (!category || !category.trim()) return;
-
+        
         const trimmedCategory = category.trim();
-
+        
         if ([...defaultCategories, ...customCategories].includes(trimmedCategory)) {
             showNotification('Category already exists', 'error');
             return;
         }
-
+        
         customCategories.push(trimmedCategory);
         saveToStorage(`categories_${currentUser.id}`, customCategories);
         initializeFormDropdowns();
-
+        
         // Auto-select the new category
         const categorySelect = document.getElementById('responsibilityCategory');
         if (categorySelect) {
             categorySelect.value = trimmedCategory;
         }
-
+        
         showNotification('New category added!', 'success');
         console.log('New custom category added:', trimmedCategory);
     } catch (error) {
@@ -1154,26 +1155,26 @@ function addCustomCategoryFromSettings() {
     try {
         const input = document.getElementById('newCategory');
         if (!input) return;
-
+        
         const category = input.value.trim();
-
+        
         if (!category) {
             showNotification('Please enter a category name', 'error');
             return;
         }
-
+        
         if ([...defaultCategories, ...customCategories].includes(category)) {
             showNotification('Category already exists', 'error');
             return;
         }
-
+        
         customCategories.push(category);
         saveToStorage(`categories_${currentUser.id}`, customCategories);
-
+        
         input.value = '';
         loadSettings(); // Refresh the settings display
         initializeFormDropdowns();
-
+        
         showNotification('Category added successfully!', 'success');
     } catch (error) {
         console.error('Error adding category from settings:', error);
@@ -1186,14 +1187,14 @@ function loadEntriesList() {
     try {
         const entriesList = document.getElementById('entriesList');
         if (!entriesList) return;
-
+        
         if (careerEntries.length === 0) {
             entriesList.innerHTML = '<p class="empty-state">No entries yet. Create your first weekly entry!</p>';
             return;
         }
-
+        
         const sortedEntries = [...careerEntries].sort((a, b) => new Date(b.weekDate) - new Date(a.weekDate));
-
+        
         entriesList.innerHTML = sortedEntries.map(entry => `
             <div class="entry-card">
                 <div class="entry-header">
@@ -1226,7 +1227,7 @@ function loadEntriesList() {
                 </div>
             </div>
         `).join('');
-
+        
         console.log('Entries list loaded');
     } catch (error) {
         console.error('Error loading entries list:', error);
@@ -1238,19 +1239,19 @@ function deleteEntry(entryId) {
         if (!confirm('Are you sure you want to delete this entry? This action cannot be undone.')) {
             return;
         }
-
+        
         const entryIndex = careerEntries.findIndex(e => e.id === entryId);
         if (entryIndex === -1) {
             showNotification('Entry not found', 'error');
             return;
         }
-
+        
         careerEntries.splice(entryIndex, 1);
         saveToStorage(`entries_${currentUser.id}`, careerEntries);
-
+        
         loadEntriesList();
         showNotification('Entry deleted successfully', 'success');
-
+        
         console.log('Entry deleted:', entryId);
     } catch (error) {
         console.error('Error deleting entry:', error);
@@ -1263,12 +1264,12 @@ function loadAnalytics() {
     try {
         const analyticsGrid = document.querySelector('.analytics-grid');
         if (!analyticsGrid) return;
-
+        
         if (careerEntries.length === 0) {
             analyticsGrid.innerHTML = '<p class="empty-state">No data to analyze yet. Create some entries first!</p>';
             return;
         }
-
+        
         // Generate basic analytics
         const totalEntries = careerEntries.length;
         const avgDifficulty = calculateAverageRating();
@@ -1279,7 +1280,7 @@ function loadAnalytics() {
                 entry.skillsUsed.forEach(skill => uniqueSkills.add(skill));
             }
         });
-
+        
         analyticsGrid.innerHTML = `
             <div class="chart-container">
                 <h3>Progress Overview</h3>
@@ -1299,7 +1300,7 @@ function loadAnalytics() {
                 <p>Upgrade to premium for detailed charts and AI-powered insights.</p>
             </div>
         `;
-
+        
         console.log('Analytics loaded');
     } catch (error) {
         console.error('Error loading analytics:', error);
@@ -1311,10 +1312,10 @@ function loadSettings() {
     try {
         const settingsName = document.getElementById('settingsName');
         const settingsEmail = document.getElementById('settingsEmail');
-
+        
         if (settingsName && currentUser) settingsName.value = currentUser.name;
         if (settingsEmail && currentUser) settingsEmail.value = currentUser.email;
-
+        
         // Load custom categories
         const customCategoriesList = document.getElementById('customCategoriesList');
         if (customCategoriesList) {
@@ -1325,7 +1326,7 @@ function loadSettings() {
                 </div>
             `).join('');
         }
-
+        
         // Load custom skills
         const customSkillsList = document.getElementById('customSkillsList');
         if (customSkillsList) {
@@ -1336,7 +1337,7 @@ function loadSettings() {
                 </div>
             `).join('');
         }
-
+        
         console.log('Settings loaded');
     } catch (error) {
         console.error('Error loading settings:', error);
@@ -1348,13 +1349,13 @@ function removeCustomCategory(category) {
         if (!confirm(`Remove the category "${category}"? This action cannot be undone.`)) {
             return;
         }
-
+        
         customCategories = customCategories.filter(c => c !== category);
         saveToStorage(`categories_${currentUser.id}`, customCategories);
-
+        
         loadSettings();
         initializeFormDropdowns();
-
+        
         showNotification('Category removed successfully', 'success');
     } catch (error) {
         console.error('Error removing custom category:', error);
@@ -1367,13 +1368,13 @@ function removeCustomSkill(skill) {
         if (!confirm(`Remove the skill "${skill}"? This action cannot be undone.`)) {
             return;
         }
-
+        
         customSkills = customSkills.filter(s => s !== skill);
         saveToStorage(`skills_${currentUser.id}`, customSkills);
-
+        
         loadSettings();
         initializeFormDropdowns();
-
+        
         showNotification('Skill removed successfully', 'success');
     } catch (error) {
         console.error('Error removing custom skill:', error);
@@ -1385,26 +1386,26 @@ function addCustomSkillFromSettings() {
     try {
         const input = document.getElementById('newSkillSetting');
         if (!input) return;
-
+        
         const skill = input.value.trim();
-
+        
         if (!skill) {
             showNotification('Please enter a skill name', 'error');
             return;
         }
-
+        
         if ([...defaultSkills, ...customSkills].includes(skill)) {
             showNotification('Skill already exists', 'error');
             return;
         }
-
+        
         customSkills.push(skill);
         saveToStorage(`skills_${currentUser.id}`, customSkills);
-
+        
         input.value = '';
         loadSettings();
         initializeFormDropdowns();
-
+        
         showNotification('Skill added successfully!', 'success');
     } catch (error) {
         console.error('Error adding skill from settings:', error);
@@ -1419,15 +1420,15 @@ function updateProfile() {
             showNotification('Please enter a valid name', 'error');
             return;
         }
-
+        
         currentUser.name = name;
         saveToStorage('currentUser', currentUser);
-
+        
         const userName = document.getElementById('userName');
         if (userName) {
             userName.textContent = name;
         }
-
+        
         showNotification('Profile updated successfully', 'success');
     } catch (error) {
         console.error('Error updating profile:', error);
@@ -1445,7 +1446,7 @@ function exportData() {
             customSkills,
             exportDate: new Date().toISOString()
         };
-
+        
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -1455,7 +1456,7 @@ function exportData() {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-
+        
         showNotification('Data exported successfully', 'success');
         console.log('Data exported');
     } catch (error) {
@@ -1469,16 +1470,16 @@ function importData() {
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = '.json';
-
+        
         input.onchange = function(event) {
             const file = event.target.files[0];
             if (!file) return;
-
+            
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
-
+                    
                     if (confirm('This will merge the imported data with your existing data. Continue?')) {
                         if (data.entries && Array.isArray(data.entries)) {
                             careerEntries.push(...data.entries);
@@ -1491,11 +1492,11 @@ function importData() {
                             customSkills.push(...data.customSkills);
                             customSkills = [...new Set(customSkills)]; // Remove duplicates
                         }
-
+                        
                         saveToStorage(`entries_${currentUser.id}`, careerEntries);
                         saveToStorage(`categories_${currentUser.id}`, customCategories);
                         saveToStorage(`skills_${currentUser.id}`, customSkills);
-
+                        
                         showNotification('Data imported successfully', 'success');
                         loadDashboardData();
                         initializeFormDropdowns();
@@ -1507,7 +1508,7 @@ function importData() {
             };
             reader.readAsText(file);
         };
-
+        
         input.click();
     } catch (error) {
         console.error('Error importing data:', error);
@@ -1520,26 +1521,26 @@ function deleteAccount() {
         if (!confirm('Are you sure you want to delete your account? This will permanently delete all your data and cannot be undone.')) {
             return;
         }
-
+        
         if (!confirm('This is your final warning. All your career entries, custom categories, and skills will be permanently deleted. Are you absolutely sure?')) {
             return;
         }
-
+        
         // Clear all user data
         localStorage.removeItem('currentUser');
         localStorage.removeItem(`entries_${currentUser.id}`);
         localStorage.removeItem(`categories_${currentUser.id}`);
         localStorage.removeItem(`skills_${currentUser.id}`);
-
+        
         currentUser = null;
         careerEntries = [];
         customCategories = [];
         customSkills = [];
         selectedSkills = [];
-
+        
         showPage('landingPage');
         showNotification('Account deleted successfully', 'success');
-
+        
         console.log('Account deleted');
     } catch (error) {
         console.error('Error deleting account:', error);
@@ -1555,7 +1556,7 @@ function searchEntries() {
             loadEntriesList();
             return;
         }
-
+        
         const filteredEntries = careerEntries.filter(entry => 
             entry.responsibilityDescription.toLowerCase().includes(query) ||
             entry.notes.toLowerCase().includes(query) ||
@@ -1563,10 +1564,10 @@ function searchEntries() {
             (entry.skillsUsed && entry.skillsUsed.some(skill => skill.toLowerCase().includes(query))) ||
             (entry.projectName && entry.projectName.toLowerCase().includes(query))
         );
-
+        
         const entriesList = document.getElementById('entriesList');
         if (!entriesList) return;
-
+        
         if (filteredEntries.length === 0) {
             entriesList.innerHTML = '<p class="empty-state">No entries found matching your search.</p>';
         } else {
@@ -1590,7 +1591,7 @@ function searchEntries() {
                 </div>
             `).join('');
         }
-
+        
         console.log('Search completed:', query, filteredEntries.length, 'results');
     } catch (error) {
         console.error('Error searching entries:', error);
@@ -1600,11 +1601,11 @@ function searchEntries() {
 // Initialize App
 function initializeApp() {
     console.log('=== Initializing CareerTrack MVP ===');
-
+    
     try {
         currentUser = loadFromStorage('currentUser');
         console.log('Current user from storage:', currentUser ? currentUser.name : 'none');
-
+        
         if (currentUser) {
             console.log('User found, loading data and showing dashboard');
             loadUserData();
@@ -1613,33 +1614,33 @@ function initializeApp() {
             console.log('No user found, showing landing page');
             showPage('landingPage');
         }
-
+        
         // Initialize form handlers
         const authForm = document.getElementById('authForm');
         const careerForm = document.getElementById('careerForm');
         const searchInput = document.getElementById('searchEntries');
-
+        
         if (authForm) {
             authForm.addEventListener('submit', handleAuth);
             console.log('Auth form handler attached');
         }
-
+        
         if (careerForm) {
             careerForm.addEventListener('submit', handleFormSubmit);
             console.log('Career form handler attached');
         }
-
+        
         if (searchInput) {
             searchInput.addEventListener('input', searchEntries);
             console.log('Search handler attached');
         }
-
+        
         console.log('=== App initialization completed successfully ===');
-
+        
     } catch (error) {
         console.error('=== Critical error during app initialization ===', error);
         showNotification('App initialization failed: ' + error.message, 'error');
-
+        
         try {
             showPage('landingPage');
         } catch (fallbackError) {
@@ -1652,7 +1653,7 @@ function initializeApp() {
 // Start the app when page loads
 document.addEventListener('DOMContentLoaded', function() {
     console.log('=== DOM Content Loaded - Starting App ===');
-
+    
     try {
         initializeApp();
     } catch (error) {
@@ -1672,4 +1673,17 @@ window.addEventListener('unhandledrejection', function(e) {
     showNotification('An async error occurred. Check console for details.', 'error');
 });
 
-console.log('=== CareerTrack MVP Enhanced JavaScript loaded completely ===');
+console.log('=== CareerTrack MVP Enhanced JavaScript loaded completely ===');'''
+
+print("✅ Created enhanced JavaScript with all 14 fields")
+print("📁 JavaScript file size:", len(enhanced_js), "characters")
+print("\n⚡ Enhanced features:")
+print("   • All 14 original fields fully implemented")
+print("   • Complete skills tagging system")
+print("   • Interactive rating stars and sliders")
+print("   • Custom category/skill management")
+print("   • Entry editing and deletion")
+print("   • Search functionality")
+print("   • Data import/export")
+print("   • Progress tracking and badges")
+print("   • Comprehensive error handling")
